@@ -67,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
     catch(e)
     {
      apifail();
+      print(e);
     }
   }
 
