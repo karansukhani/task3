@@ -57,6 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
         {
           final List<dynamic> quotes=jsonDecode(response.body);
             _quote=quotes[0]['q']+'-'+quotes[0]['a'];
+            refresh();
+
         }
       else{
         apifail();
@@ -73,6 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _quote='Failed to fetch';
     });
+  }
+  void refresh()
+  {
+    setState(() {});
   }
 
 @override
