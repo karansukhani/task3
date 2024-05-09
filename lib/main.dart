@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -34,7 +35,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController controller1=TextEditingController();
   final TextEditingController controller2=TextEditingController();
-  List<String> _history=[];
+  final List<String> _history=[];
   String result='';
    String _quote='Loading Quote';
   void _addNumber() {
@@ -55,21 +56,23 @@ class _MyHomePageState extends State<MyHomePage> {
       if(response.statusCode==200)
         {
           final List<dynamic> quotes=jsonDecode(response.body);
-          setState(() {
             _quote=quotes[0]['q']+'-'+quotes[0]['a'];
-          });
         }
-      else{setState(() {
-        _quote='Failed to fetch';
-      });
+      else{
+        apifail();
       }
     }
     catch(e)
     {
-      setState(() {
-        _quote='Failed to fetch';
-      });
+     apifail();
     }
+  }
+
+  void apifail()
+  {
+    setState(() {
+      _quote='Failed to fetch';
+    });
   }
 
 @override
@@ -82,15 +85,16 @@ _fetchrandomquote();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Task 2"),
+        title: const Text("Task 3"),
       ),
       body: Column(
         children: [
+          const Center(child: Text("Quote of the Day",)),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(_quote,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
+            child: Text(_quote,style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
           ),
-          Center(child: Text("Adder",style: TextStyle(fontWeight: FontWeight.bold),),),
+          const Center(child: Text("Adder",style: TextStyle(fontWeight: FontWeight.bold),),),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row
