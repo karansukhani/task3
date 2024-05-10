@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -20,29 +19,24 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:  const MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }
-class QuoteService{
-  final String apilink='https://zenquotes.io/api/random';
-  Future<String> fetchRandomQuote()
-  async{
-    try{
-      final response =await http.get(Uri.parse(apilink));
-      if(response.statusCode==200)
-        {
-          final List<dynamic> quotes=json.decode(response.body);
-          final String quote=quotes[0]['q']+'-'+quotes[0]['a'];
-          return quote;
-        }
-      else
-        {
-          return 'Failed to fetch';
-        }
-    }
-    catch(e)
-    {
+
+class QuoteService {
+  final String apilink = 'https://zenquotes.io/api/random';
+  Future<String> fetchRandomQuote() async {
+    try {
+      final response = await http.get(Uri.parse(apilink));
+      if (response.statusCode == 200) {
+        final List<dynamic> quotes = json.decode(response.body);
+        final String quote = quotes[0]['q'] + '-' + quotes[0]['a'];
+        return quote;
+      } else {
+        return 'Failed to fetch';
+      }
+    } catch (e) {
       return 'Failed to fetch';
     }
   }
@@ -56,36 +50,35 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final TextEditingController controller1=TextEditingController();
-  final TextEditingController controller2=TextEditingController();
-  final List<String> _history=[];
-  String result='';
-   String _quote='Loading Quote';
-   final QuoteService _quoteService=QuoteService();
-
+  final TextEditingController controller1 = TextEditingController();
+  final TextEditingController controller2 = TextEditingController();
+  final List<String> _history = [];
+  String result = '';
+  String _quote = 'Loading Quote';
+  final QuoteService _quoteService = QuoteService();
 
   void _addNumber() {
-    final int num1=int.tryParse(controller1.text) ??0;
-    final int num2=int.tryParse(controller2.text) ??0;
+    final int num1 = int.tryParse(controller1.text) ?? 0;
+    final int num2 = int.tryParse(controller2.text) ?? 0;
     setState(() {
-      result='${num1+num2}';
-      _history.add('$num1 + $num2 = ${num1+num2}');
+      result = '${num1 + num2}';
+      _history.add('$num1 + $num2 = ${num1 + num2}');
     });
   }
 
- _fetchrandomquote()
-  async{
-  final String quote=await _quoteService.fetchRandomQuote();
-   setState(() {
-    _quote=quote;
-   });
+  _fetchrandomquote() async {
+    final String quote = await _quoteService.fetchRandomQuote();
+    setState(() {
+      _quote = quote;
+    });
   }
 
-@override
-void initState(){
+  @override
+  void initState() {
     super.initState();
-_fetchrandomquote();
-}
+    _fetchrandomquote();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,16 +88,27 @@ _fetchrandomquote();
       ),
       body: Column(
         children: [
-          const Center(child: Text("Quote of the Day",)),
+          const Center(
+              child: Text(
+            "Quote of the Day",
+          )),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(_quote,style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
+            child: Text(
+              _quote,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
           ),
-          const Center(child: Text("Adder",style: TextStyle(fontWeight: FontWeight.bold),),),
+          const Center(
+            child: Text(
+              "Adder",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Row
-              (
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
@@ -116,16 +120,13 @@ _fetchrandomquote();
                     decoration: const InputDecoration(
                         hintText: 'First no.',
                         border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)
-                        )
-                    ),
+                            borderSide: BorderSide(color: Colors.black))),
                   ),
                 ),
                 const Padding(
                   padding: EdgeInsets.all(4.0),
                   child: Text("+"),
                 ),
-
                 SizedBox(
                   height: 50,
                   width: 100,
@@ -135,9 +136,7 @@ _fetchrandomquote();
                     decoration: const InputDecoration(
                         hintText: 'Second no.',
                         border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black)
-                        )
-                    ),
+                            borderSide: BorderSide(color: Colors.black))),
                   ),
                 ),
                 const Padding(
@@ -173,13 +172,11 @@ _fetchrandomquote();
               ListView.builder(
                   shrinkWrap: true,
                   itemCount: _history.length,
-                  itemBuilder: (context,index){
+                  itemBuilder: (context, index) {
                     return Text(_history[index]);
-                  }
-              )
+                  })
             ],
           ),
-
         ],
       ),
     );
