@@ -24,6 +24,29 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+class QuoteService{
+  final String apilink='https://zenquotes.io/api/random';
+  Future<String> fetchRandomQuote()
+  async{
+    try{
+      final response =await http.get(Uri.parse(apilink));
+      if(response.statusCode==200)
+        {
+          final List<dynamic> quotes=json.decode(response.body);
+          final String quote=quotes[0]['q']+'-'+quotes[0]['a'];
+          return quote;
+        }
+      else
+        {
+          return 'Failed to fetch';
+        }
+    }
+    catch(e)
+    {
+      return 'Failed to fetch';
+    }
+  }
+}
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -38,6 +61,9 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<String> _history=[];
   String result='';
    String _quote='Loading Quote';
+   final QuoteService _quoteService=QuoteService();
+
+
   void _addNumber() {
     final int num1=int.tryParse(controller1.text) ??0;
     final int num2=int.tryParse(controller2.text) ??0;
@@ -49,36 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _fetchrandomquote()
   async{
-   const String quoteurl='https://zenquotes.io/api/random';
-
-    try{
-      final response= await http.get(Uri.parse(quoteurl));
-      if(response.statusCode==200)
-        {
-          final List<dynamic> quotes=jsonDecode(response.body);
-            _quote=quotes[0]['q']+'-'+quotes[0]['a'];
-            refresh();
-
-        }
-      else{
-        apifail();
-      }
-    }
-    catch(e)
-    {
-     apifail();
-    }
-  }
-
-  void apifail()
-  {
-    setState(() {
-      _quote='Failed to fetch';
-    });
-  }
-  void refresh()
-  {
-    setState(() {});
+  final String quote=await _quoteService.fetchRandomQuote();
+   setState(() {
+    _quote=quote;
+   });
   }
 
 @override
@@ -152,10 +152,21 @@ _fetchrandomquote();
             children: [
               SizedBox(
                 height: 30,
-                width: 100,
+                width: 200,
                 child: ElevatedButton(
                   onPressed: _addNumber,
                   child: const Text("Add"),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: 30,
+                  width: 200,
+                  child: ElevatedButton(
+                    onPressed: _fetchrandomquote,
+                    child: const Text("Fetch Quote"),
+                  ),
                 ),
               ),
               const Text("History :"),
