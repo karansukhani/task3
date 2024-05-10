@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<void> _fetchrandomquote()
+ _fetchrandomquote()
   async{
   final String quote=await _quoteService.fetchRandomQuote();
    setState(() {
